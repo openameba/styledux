@@ -2,6 +2,9 @@
   "name": "styledux",
   "private": true,
   "author": "Bin Hou <houbin217jz@gmail.com> (https://github.com/kouhin)",
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "style",
     "react",

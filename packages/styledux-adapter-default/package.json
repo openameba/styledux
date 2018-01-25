@@ -1,10 +1,13 @@
 {
   "name": "@styledux/adapter-default",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Default adapter for styledux that support server-side rendering and client-side rendering.",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "npm-run-all build:es build:cjs",
     "build:cjs": "BABEL_ENV=cjs babel src --out-dir lib",
