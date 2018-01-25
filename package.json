@@ -5,6 +5,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "prepare": "lerna run build"
+  },
   "keywords": [
     "style",
     "react",

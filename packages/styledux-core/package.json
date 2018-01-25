@@ -9,8 +9,8 @@
     "access": "public"
   },
   "scripts": {
-    "prepare": "npm-run-all build",
-    "build": "npm-run-all build:es build:cjs",
+    "readme": "cp ../../README.md ./",
+    "build": "npm-run-all readme build:es build:cjs",
     "build:cjs": "BABEL_ENV=cjs babel src --out-dir lib",
     "build:es": "BABEL_ENV=es babel src --out-dir es"
   },
