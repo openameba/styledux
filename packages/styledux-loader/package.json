@@ -1,6 +1,6 @@
 {
   "name": "@styledux/loader",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "Webpack css loader for styledux.",
   "main": "index.js",
   "publishConfig": {
