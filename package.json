@@ -5,9 +5,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "publish-npm": "lerna run build && lerna publish"
-  },
   "keywords": [
     "style",
     "react",
