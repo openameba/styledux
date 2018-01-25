@@ -1,0 +1,26 @@
+{
+  "name": "@styledux/adapter-default",
+  "version": "1.0.0",
+  "description": "Default adapter for styledux that support server-side rendering and client-side rendering.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "npm-run-all build:es build:cjs",
+    "build:cjs": "BABEL_ENV=cjs babel src --out-dir lib",
+    "build:es": "BABEL_ENV=es babel src --out-dir es"
+  },
+  "keywords": [
+    "styledux",
+    "isormorphic",
+    "style-loader",
+    "css-loader",
+    "server",
+    "browser",
+    "client",
+    "css",
+    "style",
+    "react",
+    "redux"
+  ],
+  "author": "Bin Hou <houbin217jz@gmail.com> (https://github.com/kouhin)",
+  "license": "MIT"
+}

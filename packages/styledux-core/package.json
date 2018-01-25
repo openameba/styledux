@@ -1,0 +1,27 @@
+{
+  "name": "@styledux/core",
+  "version": "1.0.0",
+  "description": "A new approach of isomorphic css resolution with webpack, css-loader(css-modules) powered by redux.",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm-run-all build:es build:cjs",
+    "build:cjs": "BABEL_ENV=cjs babel src --out-dir lib",
+    "build:es": "BABEL_ENV=es babel src --out-dir es"
+  },
+  "keywords": [
+    "style",
+    "react",
+    "redux",
+    "css",
+    "isomorphic",
+    "universal"
+  ],
+  "author": "Bin Hou <houbin217jz@gmail.com> (https://github.com/kouhin)",
+  "license": "MIT",
+  "dependencies": {
+    "immutable": "rc",
+    "prop-types": "^15.6.0",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2"
+  }
+}

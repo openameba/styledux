@@ -1,0 +1,23 @@
+{
+  "name": "@styledux/loader",
+  "version": "1.0.0",
+  "description": "Webpack css loader for styledux.",
+  "main": "index.js",
+  "scripts": {
+    "build": ""
+  },
+  "keywords": [
+    "css-loader",
+    "style-loader",
+    "webpack",
+    "locals",
+    "react",
+    "isomorphic",
+    "universal"
+  ],
+  "author": "Bin Hou <houbin217jz@gmail.com> (https://github.com/kouhin)",
+  "license": "MIT",
+  "dependencies": {
+    "loader-utils": "^1.1.0"
+  }
+}
