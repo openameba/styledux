@@ -1,6 +1,6 @@
 {
   "name": "@styledux/adapter-default",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Default adapter for styledux that support server-side rendering and client-side rendering.",
   "main": "lib/index.js",
   "module": "es/index.js",
