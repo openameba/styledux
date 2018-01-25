@@ -282,7 +282,7 @@ const content = ReactDOMServer.renderToString(
     <App />
   </StyleduxProvider>
 );
-const styles = defaultSideEffect.persist(styleStore);
+const styles = mapStateOnServer(styleStore);
 
 const html = [
   '<!doctype html><html><head>',
