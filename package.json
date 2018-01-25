@@ -6,7 +6,7 @@
     "access": "public"
   },
   "scripts": {
-    "publish-npm": "lerna run build && lerna publish -- --access public"
+    "publish-npm": "lerna run build && lerna publish"
   },
   "keywords": [
     "style",
