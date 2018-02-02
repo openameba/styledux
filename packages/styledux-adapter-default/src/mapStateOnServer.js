@@ -1,6 +1,7 @@
 import getOptions from './getOptions';
 import createModuleToStylesConverter from './createModuleToStylesConverter';
 import cssWithMappingToString from './cssWithMappingToString';
+import flatStyles from './flatStyles';
 
 function persistStyles(styles, options) {
   const result = [];
@@ -34,7 +35,9 @@ function persistStyles(styles, options) {
 
 export default function mapStateOnServer(store, options = {}) {
   const opts = getOptions(options);
-  const state = store.getState();
-  const styleModules = state.reduce((r, v) => r.concat(v), []);
-  return persistStyles(createModuleToStylesConverter(opts)(styleModules), opts);
+  const { values } = store.getState();
+  return persistStyles(
+    createModuleToStylesConverter(opts)(flatStyles(values)),
+    opts
+  );
 }

@@ -1,5 +1,3 @@
-import { Map } from 'immutable';
-
 export const ADD_STYLE = 'styledux/ADD_STYLE';
 export const REMOVE_STYLE = 'styledux/REMOVE_STYLE';
 
@@ -22,23 +20,37 @@ export function removeStyle(target) {
   };
 }
 
-const INIT_STATE = new Map();
+function getInitState() {
+  return {
+    keys: [],
+    values: []
+  };
+}
 
-export default function rootReducer(state = INIT_STATE, action) {
+export default function rootReducer(state = getInitState(), action) {
   switch (action.type) {
     case ADD_STYLE: {
       const { target, style } = action.payload;
-      if (state.has(target)) {
+      const idx = state.keys.indexOf(target);
+      if (idx !== -1) {
         return state;
       }
-      return state.set(target, style);
+      return {
+        keys: [...state.keys, target],
+        values: [...state.values, style]
+      };
     }
     case REMOVE_STYLE: {
+      const { keys, values } = state;
       const { target } = action.payload;
-      if (state.has(target)) {
-        return state.delete(target);
+      const idx = keys.indexOf(target);
+      if (idx === -1) {
+        return state;
       }
-      return state;
+      return {
+        keys: keys.slice(0, idx).concat(keys.slice(idx + 1)),
+        values: values.slice(0, idx).concat(values.slice(idx + 1))
+      };
     }
     default:
       return state;
