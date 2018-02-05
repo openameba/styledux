@@ -1,14 +1,26 @@
 import getOptions from './getOptions';
 import createModuleToStylesConverter from './createModuleToStylesConverter';
 import updateDomStyles from './updateDomStyles';
+import flatStyles from './flatStyles';
 
 function diff(oldState, newState) {
-  const toAdd = newState
-    .filter((v, k) => !oldState.has(k))
-    .reduce((r, v) => r.concat(v), []);
-  const toRemove = oldState
-    .filter((v, k) => !newState.has(k))
-    .reduce((r, v) => r.concat(v), []);
+  let toAdd = [];
+  let toRemove = [];
+  const oldStyles = flatStyles(oldState.values);
+  const newStyles = flatStyles(newState.values);
+
+  for (let k = 0, newLen = newStyles.length; k < newLen; k += 1) {
+    const style = newStyles[k];
+    if (oldStyles.indexOf(style) === -1 && toAdd.indexOf(style) === -1) {
+      toAdd.push(style);
+    }
+  }
+  for (let k = 0, oldLen = oldStyles.length; k < oldLen; k += 1) {
+    const style = oldStyles[k];
+    if (newStyles.indexOf(style) === -1 && toRemove.indexOf(style) === -1) {
+      toRemove = toRemove.concat(style);
+    }
+  }
   return [toAdd, toRemove];
 }
 
