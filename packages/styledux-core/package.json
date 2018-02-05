@@ -1,6 +1,6 @@
 {
   "name": "@styledux/core",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A new approach of isomorphic css resolution with webpack, css-loader(css-modules) powered by redux.",
   "main": "lib/index.js",
   "module": "es/index.js",
