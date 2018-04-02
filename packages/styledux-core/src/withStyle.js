@@ -29,12 +29,6 @@ export default function withStyle(style) {
       constructor(props, context) {
         super(props, context);
         this.reactStyleduxStore = props[STORE_KEY] || context[STORE_KEY];
-      }
-
-      componentWillMount() {
-        if (super.componentWillMount) {
-          super.componentWillMount();
-        }
         this.isReactStyleduxMounted = false;
       }
 
