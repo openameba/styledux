@@ -16,7 +16,7 @@ export default function listToStyles(cssModule, options = {}) {
   if (transformStyles.indexOf(transformStyle) === -1) {
     transformStyles.push(transformStyle);
   }
-  if (transformIds.indexOf(transformIds) === -1) {
+  if (transformIds.indexOf(transformId) === -1) {
     transformIds.push(transformId);
   }
 
