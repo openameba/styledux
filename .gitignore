@@ -5,3 +5,4 @@ lib
 es
 .tern-port
 *.log
+/loader.js

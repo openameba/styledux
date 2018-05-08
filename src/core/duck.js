@@ -1,5 +1,6 @@
 export const ADD_STYLE = 'styledux/ADD_STYLE';
 export const REMOVE_STYLE = 'styledux/REMOVE_STYLE';
+export const UPDATE_STYLE = 'styledux/UPDATE_STYLE';
 
 export function addStyle(target, style) {
   return {
@@ -16,6 +17,16 @@ export function removeStyle(target) {
     type: REMOVE_STYLE,
     payload: {
       target
+    }
+  };
+}
+
+export function updateStyle(target, style) {
+  return {
+    type: UPDATE_STYLE,
+    payload: {
+      target,
+      style
     }
   };
 }
@@ -50,6 +61,19 @@ export default function rootReducer(state = getInitState(), action) {
       return {
         keys: keys.slice(0, idx).concat(keys.slice(idx + 1)),
         values: values.slice(0, idx).concat(values.slice(idx + 1))
+      };
+    }
+    case UPDATE_STYLE: {
+      const { target, style } = action.payload;
+      const idx = state.keys.indexOf(target);
+      if (idx === -1) {
+        return state;
+      }
+      const newValue = state.values.slice();
+      newValue[idx] = style;
+      return {
+        keys: [...state.keys],
+        values: newValue
       };
     }
     default:

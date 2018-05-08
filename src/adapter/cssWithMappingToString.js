@@ -8,9 +8,8 @@
 function toComment(sourceMap) {
   // eslint-disable-next-line no-undef
   const base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-  const data =
-    'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-  return '/*# ' + data + ' */';
+  const data = `sourceMappingURL=data:application/json;charset=utf-8;base64,${base64}`;
+  return `/*# ${data} */`;
 }
 
 export default function cssWithMappingToString(item, useSourceMap = true) {
@@ -21,9 +20,9 @@ export default function cssWithMappingToString(item, useSourceMap = true) {
   }
   if (useSourceMap && typeof btoa === 'function') {
     const sourceMapping = toComment(cssMapping);
-    const sourceURLs = cssMapping.sources.map(function(source) {
-      return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */';
-    });
+    const sourceURLs = cssMapping.sources.map(
+      source => `/*# sourceURL=${cssMapping.sourceRoot}${source} */`
+    );
 
     return [content]
       .concat(sourceURLs)
