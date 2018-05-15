@@ -8,6 +8,13 @@ const caches = {};
 const transformStyles = [];
 const transformIds = [];
 
+const isProd = (() => {
+  if (typeof process === 'undefined' || !process.env) {
+    return true;
+  }
+  return process.env.NODE_ENV === 'production';
+})();
+
 // Transform item that genreated by loader to style object
 export default function listToStyles(cssModule, options = {}) {
   const transformStyle = options.transform || Object;
@@ -15,9 +22,23 @@ export default function listToStyles(cssModule, options = {}) {
 
   if (transformStyles.indexOf(transformStyle) === -1) {
     transformStyles.push(transformStyle);
+    if (transformIds.length > 10) {
+      console.log(
+        `Possible memory leak detected. ${
+          transformIds.length
+        } transformStyle functions added.`
+      );
+    }
   }
   if (transformIds.indexOf(transformId) === -1) {
     transformIds.push(transformId);
+    if (transformIds.length > 10) {
+      console.log(
+        `Possible memory leak detected. ${
+          transformIds.length
+        } transformId functions added.`
+      );
+    }
   }
 
   const cacheKey = `${transformStyles.indexOf(
@@ -29,7 +50,7 @@ export default function listToStyles(cssModule, options = {}) {
     caches[cacheKey] = cache;
   }
   let styles = cache.get(cssModule);
-  if (styles) {
+  if (styles && isProd && !module.hot) {
     return styles;
   }
   const list = cssModule._();

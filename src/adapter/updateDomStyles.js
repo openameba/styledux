@@ -4,18 +4,24 @@
 	Author Tobias Koppers @sokra
  */
 
-/*global window,document*/
+/* global window,document */
 import cssWithMappingToString from './cssWithMappingToString';
 
 const stylesInDom = {};
+const noop = () => {};
+const raf =
+  typeof window !== 'undefined' && window.requestAnimationFrame
+    ? window.requestAnimationFrame
+    : fn => fn();
 
 function applyToTag(style, obj) {
   const css = cssWithMappingToString(obj, true);
-  const media = obj.media;
+  const { media } = obj;
   if (media) {
     style.setAttribute('media', media);
   }
   if (style.styleSheet) {
+    // eslint-disable-next-line no-param-reassign
     style.styleSheet.cssText = css;
   } else {
     while (style.firstChild) {
@@ -25,11 +31,11 @@ function applyToTag(style, obj) {
   }
 }
 
-const getElement = (function(fn) {
+const getElement = (fn => {
   const memo = {};
-  return function(selector) {
+  return selector => {
     if (typeof memo[selector] === 'undefined') {
-      let styleTarget = fn.call(this, selector);
+      let styleTarget = fn(selector);
       // Special case to return head of iframe instead of iframe itself
       if (styleTarget instanceof window.HTMLIFrameElement) {
         try {
@@ -44,9 +50,7 @@ const getElement = (function(fn) {
     }
     return memo[selector];
   };
-})(function(target) {
-  return document.querySelector(target);
-});
+})(target => document.querySelector(target));
 
 function insertStyleElement(options, style) {
   const target = getElement(options.insertInto);
@@ -55,21 +59,27 @@ function insertStyleElement(options, style) {
       "Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid."
     );
   }
-  if (!options.insertAt) {
-    target.appendChild(style);
-  } else {
-    const nextSibling = getElement(options.insertInto + ' ' + options.insertAt);
-    target.insertBefore(style, nextSibling);
-  }
+  raf(() => {
+    if (!options.insertAt) {
+      target.appendChild(style);
+    } else {
+      const nextSibling = getElement(
+        `${options.insertInto} ${options.insertAt}`
+      );
+      target.insertBefore(style, nextSibling);
+    }
+  });
 }
 
 function removeStyleElement(style) {
-  if (!style || style.parentNode === null) return false;
-  style.parentNode.removeChild(style);
+  raf(() => {
+    if (!style || style.parentNode === null) return;
+    style.parentNode.removeChild(style);
+  });
 }
 
 function addAttrs(el, attrs) {
-  Object.keys(attrs).forEach(function(key) {
+  Object.keys(attrs).forEach(key => {
     el.setAttribute(key, attrs[key]);
   });
 }
@@ -85,15 +95,15 @@ function createStyleElement(id, options) {
 function addStyle(obj, options) {
   // If a transform function was defined, run it on the css
   if (!obj.css) {
-    return function() {
-      // noop
-    };
+    return noop;
   }
   const exist = document.getElementById(obj.id);
   const style = exist || createStyleElement(obj.id, options);
-  const update = obj => applyToTag(style, obj);
+  const update = o => applyToTag(style, o);
   const remove = () => removeStyleElement(style);
-  !exist && update(obj);
+  if (!exist) {
+    update(obj);
+  }
   return function updateStyle(newObj) {
     if (newObj) {
       if (
@@ -103,21 +113,22 @@ function addStyle(obj, options) {
       ) {
         return;
       }
-      update((obj = newObj));
+      // eslint-disable-next-line no-param-reassign
+      obj = newObj;
+      update(obj);
     } else {
       remove();
     }
   };
 }
 
-export default function updateDomStyles(toAdd, toRemove, options) {
+export default function updateDomStyles(toAdd, toRemove, toUpdate, options) {
   for (let i = 0, len = toAdd.length; i < len; i += 1) {
     const item = toAdd[i];
     const domStyle = stylesInDom[item.id];
     if (domStyle) {
-      domStyle.refs++;
+      domStyle.refs += 1;
       domStyle.content(item);
-      domStyle.content = addStyle(item, options);
     } else {
       const content = addStyle(item, options);
       stylesInDom[item.id] = { id: item.id, refs: 1, content };
@@ -128,7 +139,7 @@ export default function updateDomStyles(toAdd, toRemove, options) {
     const item = toRemove[i];
     const domStyle = stylesInDom[item.id];
     if (domStyle) {
-      domStyle.refs--;
+      domStyle.refs -= 1;
       if (domStyle.refs <= 0) {
         domStyle.content();
         delete stylesInDom[domStyle.id];
@@ -138,6 +149,14 @@ export default function updateDomStyles(toAdd, toRemove, options) {
       if (el) {
         removeStyleElement(el);
       }
+    }
+  }
+
+  for (let i = 0, len = toUpdate.length; i < len; i += 1) {
+    const item = toUpdate[i];
+    const domStyle = stylesInDom[item.id];
+    if (domStyle) {
+      domStyle.content(item);
     }
   }
 }

@@ -4,27 +4,37 @@ A new approach of isomorphic css resolution with webpack, css-loader(css-modules
 
 IT'S **style-dux**, not styled-ux.
 
-Status: `alpha version`
+Status: `beta`
+
+## Features
+
+* [x] Plain, simple, original css with css modules (with Webpack css-loader). Also support LESS, SCSS, Sass, Stylus, PostCSS...
+* [x] NO extra editor plugin required, because it's only **PLAIN css** + jsx.
+* [x] **Universal javascript** support (Server side rendering + Client side rendering)
+* [x] **Thread-safe** server side rendering, renderToNodeStream() / renderToStaticNodeStream() is OK.
+* [x] Remove styles when render() returns null automatically
+* [x] **Middleware** support (Powered by [redux](https://github.com/reduxjs/redux))
+* [x] Webpack Hot Module Replacement (HMR)
 
 ## Installation
 
 **For npm**
 
 ``` shell
-npm install @styledux/loader --save-dev
-npm install @styledux/core @styledux/adapter-default --save
+npm install styledux
 ```
 
 **For yarn**
 
 ``` shell
-yarn add @styledux/loader --dev
-yarn add @styledux/core @styledux/adapter-default
+yarn add styledux
 ```
 
-## Configuration
+## Usage
 
-Add `@styledux/loader` before `css-loader` to your webpack configuration.
+### 1. Configuration
+
+Add `styledux/loader` before `css-loader` to your webpack configuration.
 
 ```
 module: {
@@ -33,16 +43,16 @@ module: {
       test: /\.css$/,
       use: [
         {
-          loader: '@styledux/loader'
+          loader: 'styledux/loader'
         },
         {
           loader: 'css-loader',
           options: {
-            modules: true,
+            modules: true, // css modules support, important!!
             importLoaders: 1,
-            localIdentName: isProd ? '_[hash:base64:8]' : '[name]__[local]___[hash:base64:5]',
-            minimize: target === 'client' && isProd,
-            sourceMap: !isProd,
+            localIdentName: process.env.NODE_ENV === 'production' ? '_[hash:base64:8]' : '[name]__[local]___[hash:base64:5]',
+            minimize: process.env.NODE_ENV === 'production',
+            sourceMap: true,
           }
         },
         {
@@ -54,9 +64,9 @@ module: {
 }
 ```
 
-> `@styledux/loader` is simply to export locals that generated from css-loader and wrap original css contents with a function `_()`.
+> `styledux/loader` is simply to export locals that generated from css-loader and wrap original css contents with a function `_()`.
 
-## Decorate react components with `@withStyle`
+### 2. Decorate React components with `@withStyle`
 
 `ExampleComponent.css`
 
@@ -82,7 +92,7 @@ module: {
 `ExampleComponent.js`
 
 ```jsx
-import { withStyle } from '@styledux/core'
+import { withStyle } from 'styledux'
 
 import style from './ExampleComponent.css';
 
@@ -103,7 +113,7 @@ For stateless component
 `ExampleStatelessComponent.js`
 
 ``` js
-import { withStyle } from '@styledux/core'
+import { withStyle } from 'styledux'
 
 import style from './ExampleComponent.css';
 
@@ -118,12 +128,11 @@ const component = withStyle(style)(ExampleStatelessComponent);
 export default component;
 ```
 
-## Server side rendering
+### 3. Server side rendering
 
 ``` jsx
 import ReactDOMServer from 'react-dom/server';
-import { createStyleduxStore, StyleduxProvider } from '@styledux/core';
-import { mapStateOnServer } from '@styledux/adapter-default';
+import { createStyleduxStore, StyleduxProvider, mapStateOnServer } from 'styledux';
 
 export function renderHTML(App) {
   const styleStore = createStyleduxStore();
@@ -145,12 +154,11 @@ export function renderHTML(App) {
 }
 ```
 
-## Client Side Rendering
+### 4. Client Side Rendering
 
 ``` jsx
 import ReactDOM from 'react-dom';
-import { createStyleduxStore, StyleduxProvider } from '@styledux/core';
-import { handleStateChangeOnClient } from '@styledux/adapter-default';
+import { createStyleduxStore, StyleduxProvider, handleStateChangeOnClient } from 'styledux';
 
 function rehydrateApp(App) {
   ReactDOM.hydrate(
@@ -162,9 +170,7 @@ function rehydrateApp(App) {
 }
 ```
 
-## API
-
-### **Package: @styledux/core**
+# API
 
 #### `<StyleduxProvider store>`
 
@@ -178,7 +184,7 @@ See https://github.com/reactjs/react-redux/blob/master/docs/api.md#provider-stor
 ##### Example:
 
 ``` jsx
-import { StyleduxProvider } from '@styledux/core';
+import { StyleduxProvider } from 'styledux';
 
 ReactDOM.render(
   <StyleduxProvider store={styleStore}>
@@ -196,14 +202,14 @@ ReactDOM.render(
 
 You can create your own middlewares to handle state changes.
 
-`handleStateChangeOnClient(options)` of `@styledux/adapter-default` creates a middleware that mount styles like `style-loader`.
+`handleStateChangeOnClient(options)` creates a middleware that mount styles like `style-loader`.
 
 ##### Example
 
 **On server:**
 
 ``` js
-import { createStyleduxStore } from '@styledux/core';
+import { createStyleduxStore } from 'styledux';
 
 const styleStore = createStyleduxStore();
 ```
@@ -211,8 +217,7 @@ const styleStore = createStyleduxStore();
 **On client:**
 
 ``` js
-import { createStyleduxStore } from '@styledux/core';
-import { handleStateChangeOnClient } from '@styledux/adapter-default';
+import { createStyleduxStore, handleStateChangeOnClient } from 'styledux';
 
 const middleware = handleStateChangeOnClient({ insertAt: '#main_css' });
 const styleStore = createStyleduxStore(middleware);
@@ -226,12 +231,12 @@ It dispatches an `ADD_STYLE` action when `render()` returned non-empty result, a
 
 ##### Arguments
 
-- style (Object | Array): style object that was generated by `@styledux/loader`.
+- style (Object | Array): style object that was generated by `styledux/loader`.
 
 ##### Example
 
 ```js
-import { withStyle } from '@styledux/core';
+import { withStyle } from 'styledux';
 
 import style1 from './style1.css';
 import style2 from './style2.css';
@@ -242,7 +247,7 @@ class ExampleComponent extends React.Component {
 ```
 
 ```js
-import { withStyle } from '@styledux/core';
+import { withStyle } from 'styledux';
 
 import style from './style.css';
 
@@ -251,15 +256,11 @@ class ExampleComponent extends React.Component {
 }
 ```
 
-### **Package: @styledux/loader**
+### `mapStateOnServer(options)` and `handleStateChangeOnClient(options)`
 
-Use it before css-loader in webpack configuration.
+The built-in adapter for styledux.
 
-### **Package: @styledux/adapter-default**
-
-The default adapter for styledux.
-
-Make sure `mapStateOnServer(options)` and `handleStateChangeOnClient(options)` use the same options.
+When you build a universal web application, make sure `mapStateOnServer(options)` and `handleStateChangeOnClient(options)` use the same options.
 
 #### options:
 
@@ -271,7 +272,7 @@ Make sure `mapStateOnServer(options)` and `handleStateChangeOnClient(options)` u
 
 #### `mapStateOnServer(styleduxStore, options)`
 
-Generate `<style>` from styleduxStore on server side.
+Only required for server-side rendering. Generate `<style>` from styleduxStore on server side.
 
 ##### Example
 

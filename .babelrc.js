@@ -1,13 +1,24 @@
 module.exports = {
   presets: [
     [
-      "@babel/preset-env",
+      '@babel/preset-env',
       {
-        loose: true,
-        modules: process.env.BABEL_ENV === "es" ? false : "commonjs"
-      },
+        targets: {
+          browsers: ['ie >= 11']
+        },
+        modules: process.env.NODE_ENV === 'test' ? 'commonjs' : false,
+        loose: true
+      }
     ],
-    "@babel/preset-stage-1",
-    "@babel/preset-react"
+    '@babel/preset-react'
+  ],
+  plugins: [
+    '@babel/plugin-proposal-object-rest-spread',
+    [
+      '@babel/plugin-proposal-class-properties',
+      {
+        loose: true
+      }
+    ]
   ]
 };
