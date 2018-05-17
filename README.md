@@ -265,8 +265,8 @@ When you build a universal web application, make sure `mapStateOnServer(options)
 #### options:
 
 - `attrs` (Object): Add custom attrs to `<style></style>` (**default: {}**).
-- `transform` (Function): Transform/Conditionally load CSS by passing a transform/condition function. (**default: (obj) => obj **)
-- `transformId` (Function): Transform webpack module id to element id. (**default: ** see [getOptions](packages/styledux-adapter-default/src/getOptions.js) )
+- `transform` (Function): Transform/Conditionally load CSS by passing a transform/condition function. (**default: (obj) => obj**)
+- `transformId` (Function): Transform webpack module id to element id. (**default:** see [getOptions](src/adapter/getOptions.js) )
 - `insertAt` (null|String): Inserts <style></style> at the given position. Different from `style-loader`. (**default: null**)
 - `insertInto` (String): Inserts <style></style> into the given position. (**default: <head>**)
 
