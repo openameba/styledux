@@ -50,6 +50,7 @@ module.exports.pitch = function pitch(request) {
     `function wrap(c) {`,
     `  var o = _extends({}, c.locals || {});`,
     `  _define(o, '_', { value: function() { return c; } });`,
+    `  _define(o, 'toString', { value: function() { return typeof c.toString === 'function' ? c.toString() : '' } });`,
     `  return o;`,
     `}`,
     `if(typeof content === 'string') content = [[module.id, content, '']];`,
