@@ -1,7 +1,7 @@
 {
   "name": "styledux",
   "description": "A new approach of isomorphic css resolution with webpack, css-loader(css-modules) powered by redux.",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
