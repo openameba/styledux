@@ -9,10 +9,6 @@ import cssWithMappingToString from './cssWithMappingToString';
 
 const stylesInDom = {};
 const noop = () => {};
-const raf =
-  typeof window !== 'undefined' && window.requestAnimationFrame
-    ? window.requestAnimationFrame
-    : fn => fn();
 
 function applyToTag(style, obj) {
   const css = cssWithMappingToString(obj, true);
@@ -59,23 +55,17 @@ function insertStyleElement(options, style) {
       "Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid."
     );
   }
-  raf(() => {
-    if (!options.insertAt) {
-      target.appendChild(style);
-    } else {
-      const nextSibling = getElement(
-        `${options.insertInto} ${options.insertAt}`
-      );
-      target.insertBefore(style, nextSibling);
-    }
-  });
+  if (!options.insertAt) {
+    target.appendChild(style);
+  } else {
+    const nextSibling = getElement(`${options.insertInto} ${options.insertAt}`);
+    target.insertBefore(style, nextSibling);
+  }
 }
 
 function removeStyleElement(style) {
-  raf(() => {
-    if (!style || style.parentNode === null) return;
-    style.parentNode.removeChild(style);
-  });
+  if (!style || style.parentNode === null) return;
+  style.parentNode.removeChild(style);
 }
 
 function addAttrs(el, attrs) {
