@@ -109,6 +109,7 @@ export default function withStyle(style) {
       }
     };
 
+    /* eslint-disable react/no-this-in-sfc */
     WithStyle.prototype.render = function render() {
       const result = originalRender.apply(this, arguments);
       return (
@@ -132,6 +133,7 @@ export default function withStyle(style) {
         </StyleduxConsumer>
       );
     };
+    /* eslint-enable react/no-this-in-sfc */
     WithStyle.displayName = `WithStyle(${wrappedComponentName})`;
     return WithStyle;
   };
