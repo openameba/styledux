@@ -1,7 +1,6 @@
 import React from 'react';
-import { createContext } from 'react-broadcast';
 
-const { Provider, Consumer } = createContext();
+const { Provider, Consumer } = React.createContext();
 
 function StyleduxProvider({ store, children }) {
   return <Provider value={store}>{children}</Provider>;
